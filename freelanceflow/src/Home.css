@@ -1,0 +1,295 @@
+.home-container {
+  max-width: 700px;
+  margin: 6rem auto 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.home-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #4B0082;
+  margin-bottom: 1rem;
+  letter-spacing: 0.04em;
+}
+
+.home-subtitle {
+  font-weight: 400;
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 2.5rem;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.home-illustration {
+  margin: 0 auto 3rem;
+  max-width: 200px;
+  stroke: #4B0082;
+}
+
+.home-cta-button {
+  background-color: #4B0082;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(75, 0, 130, 0.4);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.home-cta-button:hover {
+  background-color: #3a006b;
+  transform: scale(1.05);
+}
+
+/* ---------- POPUP STYLING ---------- */
+.role-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 370px;
+  padding: 35px;
+  border-radius: 20px;
+  text-align: center;
+  z-index: 10;
+  animation: popIn 0.5s ease;
+}
+
+.glass-popup {
+  backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 25px rgba(75, 0, 130, 0.5);
+  animation: glow 2s infinite alternate;
+}
+
+.popup-text {
+  color: #4b0082;
+  font-style: italic;
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+.role-popup h2 {
+  color: #4b0082;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.role-buttons {
+  display: flex;
+  justify-content: space-around;
+  gap: 15px;
+}
+
+.role-button {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s, background 0.3s;
+  font-size: 1rem;
+}
+
+.role-button.freelancer {
+  background: linear-gradient(135deg, #8e44ad, #9b59b6);
+}
+
+.role-button.client {
+  background: linear-gradient(135deg, #6a0dad, #8a2be2);
+}
+
+.role-button:hover {
+  transform: scale(1.08);
+  opacity: 0.9;
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 15px rgba(155, 89, 182, 0.3); }
+  to { box-shadow: 0 0 25px rgba(155, 89, 182, 0.6); }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@media (max-width: 600px) {
+  .home-title {
+    font-size: 2.2rem;
+  }
+  .home-subtitle {
+    font-size: 1.1rem;
+  }
+  .home-cta-button {
+    padding: 12px 26px;
+    font-size: 1rem;
+  }
+  .role-popup {
+    width: 90%;
+  }
+}
+/* ========== INLINE ROLE SELECTOR (NEW) ========== */
+.inline-role-selector {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
+  backdrop-filter: blur(25px);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 35px 70px rgba(75, 0, 130, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+  position: relative;
+  overflow: hidden;
+}
+
+.inline-role-selector::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 24px;
+  padding: 2px;
+  background: linear-gradient(45deg, #4B0082, #9333ea, #6B21A8, #10b981, #3b82f6);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  z-index: -1;
+  animation: borderRotate 4s linear infinite;
+}
+
+.role-selector-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.role-selector-header h2 {
+  color: #4B0082;
+  font-weight: 800;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #4B0082, #9333ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.role-selector-header p {
+  color: #6B21A8;
+  font-style: italic;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.inline-role-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.inline-role-button {
+  flex: 1;
+  padding: 1.5rem;
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.inline-role-button span {
+  font-size: 3rem;
+  margin-bottom: 0;
+}
+
+.inline-role-button div {
+  text-align: center;
+}
+
+.inline-role-button strong {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.inline-role-button small {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.inline-role-button.freelancer {
+  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+  box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+}
+
+.inline-role-button.client {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+  box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+}
+
+.role-selected-indicator {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
+.role-selected-indicator span {
+  color: #4B0082;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .inline-role-selector {
+    margin: 0 1rem;
+    padding: 2rem 1.5rem;
+  }
+  
+  .inline-role-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .inline-role-button {
+    min-height: 100px;
+  }
+  
+  .role-selector-header h2 {
+    font-size: 1.6rem;
+  }
+}

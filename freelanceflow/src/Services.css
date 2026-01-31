@@ -1,0 +1,125 @@
+.services-page {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(180deg, #faf0ff, #ffffff);
+  padding: 3rem 1.5rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.services-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.services-header h1 {
+  color: #5e17eb;
+  font-size: 2.8rem;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(94, 23, 235, 0.3);
+}
+
+.services-header p {
+  color: #555;
+  font-size: 1.1rem;
+  margin-top: 0.6rem;
+}
+
+.wave-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 180px;
+  background: radial-gradient(circle at 50% 0%, #c49bff, transparent 70%);
+  opacity: 0.3;
+  animation: floatWave 6s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+@keyframes floatWave {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(15px);
+  }
+}
+
+.services-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.service-box {
+  background: linear-gradient(135deg, #6f2dbd, #b298dc);
+  border-radius: 20px;
+  color: white;
+  text-align: center;
+  padding: 2rem 1rem;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transition: 0.3s ease;
+}
+
+.service-box:hover {
+  box-shadow: 0 12px 25px rgba(111, 45, 189, 0.4);
+}
+
+.icon-circle {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.4s;
+}
+
+.service-box:hover .icon-circle {
+  background: rgba(255, 255, 255, 0.4);
+  transform: rotate(10deg);
+}
+
+.service-box h3 {
+  margin: 0.6rem 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.service-box p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.freelancer-client-section {
+  background: linear-gradient(120deg, #e2c6ff, #ffffff);
+  border-radius: 25px;
+  padding: 2.5rem 2rem;
+  margin-top: 4rem;
+  box-shadow: 0 6px 18px rgba(111, 45, 189, 0.2);
+  text-align: center;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.freelancer-client-section h2 {
+  color: #5e17eb;
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+.freelancer-client-section p {
+  color: #333;
+  margin-top: 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}

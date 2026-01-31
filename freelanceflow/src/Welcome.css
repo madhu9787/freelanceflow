@@ -1,0 +1,213 @@
+.welcome-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #4B0082;
+  padding: 2rem;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ✅ ENHANCED: Animated gradient background */
+.welcome-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(-45deg, #f3e8ff, #e9d5ff, #d4b3ff, #c4a7ff);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  z-index: 1;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ✅ NEW: Floating shapes */
+.floating-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  background: rgba(107, 33, 168, 0.1);
+  border-radius: 50%;
+  backdrop-filter: blur(10px);
+}
+
+.shape-1 {
+  width: 120px;
+  height: 120px;
+  top: 20%;
+  left: 10%;
+  border-radius: 50% 20% 30% 70%;
+}
+
+.shape-2 {
+  width: 80px;
+  height: 80px;
+  top: 60%;
+  right: 15%;
+  border-radius: 30% 60% 70% 30%;
+}
+
+.shape-3 {
+  width: 60px;
+  height: 60px;
+  top: 10%;
+  right: 10%;
+  border-radius: 50%;
+}
+
+/* Glassmorphism content */
+.welcome-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 4rem 3.5rem;
+  border-radius: 24px;
+  box-shadow: 
+    0 25px 45px rgba(75, 0, 130, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  color: #4B0082;
+  position: relative;
+  z-index: 10;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.welcome-content:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 35px 65px rgba(75, 0, 130, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+/* Logo */
+.welcome-logo {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/* Gradient title */
+.welcome-title {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #4B0082 0%, #7a13c4 50%, #9333ea 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #4B0082 0%, #7a13c4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Enhanced subtitle */
+.welcome-subtitle {
+  font-weight: 400;
+  font-size: 1.2rem;
+  margin-bottom: 3rem;
+  color: #6B21A8;
+  line-height: 1.7;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.highlight {
+  color: #9333EA;
+  font-weight: 600;
+}
+
+/* Enhanced buttons */
+.welcome-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.btn {
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4B0082 0%, #6B21A8 50%, #7a13c4 100%);
+  color: white;
+  box-shadow: 0 10px 25px rgba(75, 0, 130, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.9);
+  color: #4B0082;
+  border: 2px solid rgba(75, 0, 130, 0.3);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Feature preview */
+.features-preview {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #6B21A8;
+  font-weight: 500;
+}
+
+.feature-icon {
+  font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .welcome-title { font-size: 2.4rem; }
+  .welcome-subtitle { font-size: 1.1rem; }
+  .welcome-content { padding: 3rem 2rem; margin: 1rem; }
+  .features-preview { gap: 1.5rem; }
+}
+
+@media (max-width: 360px) {
+  .welcome-title { font-size: 2.1rem; }
+  .btn { padding: 14px 24px; font-size: 1rem; }
+}
