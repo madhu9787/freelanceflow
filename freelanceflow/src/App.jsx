@@ -223,7 +223,7 @@ const App = () => {
           }
         />
 
-        {/* Auth routes */}
+        
         <Route path="/login" element={user ? <Navigate to="/home" replace /> : <Login />} />
         <Route path="/signup" element={user ? <Navigate to="/home" replace /> : <Signup />} />
 
