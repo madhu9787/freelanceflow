@@ -1,4 +1,50 @@
 
+// import mongoose from "mongoose";
+
+// const projectSchema = new mongoose.Schema(
+//   {
+//     title: { type: String, required: true },
+//     description: { type: String, required: true },
+//     budget: { type: Number, required: true },
+//     duration: String,
+//     skills: String,
+//     experience: String,
+//     category: String,
+//     clientName: String,
+
+//     freelancerId: { type: String, default: null },
+//     bidsCount: { type: Number, default: 0 },
+    
+//     progress: { type: Number, default: 0 },
+//     chatEnabled: { type: Boolean, default: false },
+//     freelancerName: { type: String, default: null },
+    
+//     // 🔥 NEW FIELDS FOR RATINGS
+//     files: [{
+//       name: { type: String, required: true },
+//       url: { type: String, required: true },
+//       size: { type: Number, required: true },
+//       uploadedBy: { type: String, default: "Freelancer" },
+//       uploadedAt: { type: Date, default: Date.now }
+//     }],
+    
+//     // 🔥 RATING FIELDS
+//     rating: { type: Number, min: 1, max: 5 },
+//     review: String,
+//     completedAt: Date,
+//     reviewedAt: Date,
+//     deliverableUrl: String,
+    
+//     status: {
+//       type: String,
+//       enum: ["open", "accepted", "in-progress", "completed", "reviewed"],
+//       default: "open",
+//     },
+//   },
+//   { timestamps: true }
+// );
+
+// export default mongoose.model("Project", projectSchema);
 import mongoose from "mongoose";
 
 const projectSchema = new mongoose.Schema(
@@ -19,7 +65,7 @@ const projectSchema = new mongoose.Schema(
     chatEnabled: { type: Boolean, default: false },
     freelancerName: { type: String, default: null },
     
-    // 🔥 NEW FIELDS FOR RATINGS
+    // 🔥 NEW FIELDS FOR RATINGS (YOUR EXISTING)
     files: [{
       name: { type: String, required: true },
       url: { type: String, required: true },
@@ -28,7 +74,7 @@ const projectSchema = new mongoose.Schema(
       uploadedAt: { type: Date, default: Date.now }
     }],
     
-    // 🔥 RATING FIELDS
+    // 🔥 RATING FIELDS (YOUR EXISTING)
     rating: { type: Number, min: 1, max: 5 },
     review: String,
     completedAt: Date,
@@ -37,9 +83,30 @@ const projectSchema = new mongoose.Schema(
     
     status: {
       type: String,
-      enum: ["open", "accepted", "in-progress", "completed", "reviewed"],
+      enum: ["open", "accepted", "in-progress", "completed"],
       default: "open",
     },
+
+    // 🔥 🔥 🔥 NEW PAYMENT FIELDS (STEP 2) 🔥 🔥 🔥
+    paymentStatus: { 
+      type: String, 
+      enum: ['unfunded', 'funded', 'released', 'disputed'], 
+      default: 'unfunded' 
+    },
+    paymentId: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'Payment' 
+    },
+    escrowAmount: { 
+      type: Number, 
+      default: 0 
+    },
+    freelancerPayout: { 
+      type: Number, 
+      default: 0 
+    },
+    paymentDate: Date
+    // 🔥 🔥 🔥 END PAYMENT FIELDS 🔥 🔥 🔥
   },
   { timestamps: true }
 );

@@ -15,12 +15,14 @@
     "@google/generative-ai": "^0.24.1",
     "axios": "^1.13.4",
     "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "mongoose": "^8.19.2",
     "multer": "^2.0.2",
     "node-fetch": "^3.3.2",
     "openai": "^6.7.0",
+    "razorpay": "^2.9.6",
     "socket.io": "^4.8.1"
   }
 }
