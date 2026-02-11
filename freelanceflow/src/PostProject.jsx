@@ -635,7 +635,7 @@ import ChatModel from "./ChatModel";
 import { FaPlus, FaPaperPlane, FaEye, FaCheck, FaTimes, FaChartBar, FaBell, FaComments, FaClock, FaComment, FaDownload, FaFolderOpen, FaFileAlt, FaStar, FaCreditCard } from "react-icons/fa";
 import "./PostProject.css";
 
-const socket = io(`${import.meta.env.VITE_API_URL}");
+const socket = io(`${import.meta.env.VITE_API_URL}`);
 
 const messages = [
   "✨ Post your project and hire top freelancers",
@@ -775,7 +775,7 @@ const PostProject = () => {
     
     const fetchPostedProjects = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects");
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects`);
         console.log("📊 DB projects:", res.data.length);
         setPostedProjects(res.data);
       } catch (error) {
@@ -797,7 +797,7 @@ const PostProject = () => {
     try {
       console.log(`💳 Paying project: ${project.title}`);
       
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/payments/pay-project", {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/payments/pay-project`, {
         projectId: project._id,
         amount: project.budget,
         freelancerId: project.freelancerId || "tempFreelancer"
@@ -816,7 +816,7 @@ const PostProject = () => {
   // 🔥 NEW RATING FUNCTIONS
   const markComplete = async (projectId) => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/projects/complete", { projectId });
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/projects/complete`, { projectId });
       alert("✅ Project marked complete! Please rate the freelancer.");
     } catch (error) {
       alert("Error marking complete");
@@ -831,7 +831,7 @@ const PostProject = () => {
 
   const submitRating = async () => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/projects/rate", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/projects/rate`, {
         projectId: showRatingModal,
         rating: tempRating,
         review: tempReview

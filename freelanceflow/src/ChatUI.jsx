@@ -147,7 +147,7 @@ const ChatUI = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/ai", { message: userInput });
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/ai`, { message: userInput });
       setMessages(prev => [...prev, { 
         id: Date.now() + 1, 
         sender: "ai", 
