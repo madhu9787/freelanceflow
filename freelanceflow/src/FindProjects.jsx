@@ -1440,7 +1440,7 @@ const FreelancerDashboard = () => {
 
   const fetchMyBids = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/bids/my-bids`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/bids/my-bids/tempFreelancer`);
       const acceptedBids = (res.data || []).filter(bid => 
         bid.status === "accepted" || bid.status === "hired" || bid.status === "won"
       );
