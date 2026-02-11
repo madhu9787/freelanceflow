@@ -343,7 +343,8 @@ app.use("/api/ai", aiRoute);
 import payments from "./routes/payments.js"
 
 app.use('/api/payments', payments);
-
+import bidRoutes from "./routes/bids.js";
+app.use("/api/bids", bidRoutes);
 // 🔥 FILE UPLOAD + PROGRESS - COMPLETE BLOCK
 import multer from 'multer';
 import path from 'path';
