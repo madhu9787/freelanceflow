@@ -1409,34 +1409,29 @@ const FreelancerDashboard = () => {
     };
   }, []);
 
-  // ✅ FIXED fetchProjects - SHOWS PAID PROJECTS
   const fetchProjects = async () => {
-    try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects`);
-      const allProjects = res.data || [];
-      setProjects(allProjects);
-      
-      // Available projects
-      const available = allProjects.filter(project => 
-        project.status === "open" || 
-        (project.status === "accepted" && project.freelancerId !== "tempFreelancer")
-      );
-      setFilteredProjects(available);
-      
-      // ✅ FIXED: My projects (accepted + completed + paid + reviewed)
-      const myProjects = allProjects.filter(project => 
-        (project.freelancerId === "tempFreelancer" || project.freelancerName === "John Doe") &&
-        (project.status === "accepted" || 
-         project.status === "completed" || 
-         project.paymentStatus === "released" ||
-         project.paymentStatus === "paid" ||
-         project.rating)
-      );
-      setAcceptedProjects(myProjects);
-    } catch (error) {
-      console.error("Error fetching projects:", error.response?.data || error.message);
-    }
-  };
+  try {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects`);
+    const allProjects = res.data || [];
+
+    setProjects(allProjects);
+
+    // ✅ Available projects
+    const available = allProjects.filter(project =>
+      project.status === "open"
+    );
+    setFilteredProjects(available);
+
+    // ✅ My Projects
+    const myProjects = allProjects.filter(project =>
+      project.freelancerId === "tempFreelancer"
+    );
+    setAcceptedProjects(myProjects);
+
+  } catch (error) {
+    console.error("Error fetching projects:", error.response?.data || error.message);
+  }
+};
 
   const fetchMyBids = async () => {
     try {
