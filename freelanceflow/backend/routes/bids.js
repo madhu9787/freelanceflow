@@ -65,4 +65,19 @@ router.put("/:bidId/accept", async (req, res) => {
   }
 });
 
+// GET /api/bids/my-bids/:freelancerId
+router.get("/my-bids/:freelancerId", async (req, res) => {
+  try {
+    const bids = await Bid.find({
+      freelancerId: req.params.freelancerId
+    })
+      .populate("projectId", "title clientName budget status")
+      .sort({ createdAt: -1 });
+
+    res.json(bids);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;
