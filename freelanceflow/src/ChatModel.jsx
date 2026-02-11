@@ -4,7 +4,7 @@
 // import { FaPaperPlane, FaTimes } from "react-icons/fa";
 // import "./ChatModel.css";
 
-// const socket = io("http://localhost:5000");
+// const socket = io("${import.meta.env.VITE_API_URL}");
 
 // const ChatModel = ({ 
 //   projectId, 
@@ -37,7 +37,7 @@
 //     // Load existing messages
 //     const fetchMessages = async () => {
 //       try {
-//         const res = await axios.get(`http://localhost:5000/api/chat/project/${projectId}`);
+//         const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/chat/project/${projectId}`);
 //         setMessages(res.data);
 //       } catch (error) {
 //         console.error("Chat load error:", error);
@@ -135,7 +135,7 @@ import io from "socket.io-client";
 import { FaPaperPlane, FaTimes } from "react-icons/fa";
 import "./ChatModel.css";
 
-const socket = io("http://localhost:5000");
+const socket = io("${import.meta.env.VITE_API_URL}");
 
 const ChatModel = ({ 
   projectId, 

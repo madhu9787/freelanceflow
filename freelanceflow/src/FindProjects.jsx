@@ -4,7 +4,7 @@
 // import io from "socket.io-client";         
 // import { FaComment } from "react-icons/fa";  
 
-// const socket = io("http://localhost:5000");  
+// const socket = io("${import.meta.env.VITE_API_URL}");  
 
 // const FreelancerDashboard = () => {
 //   const [projects, setProjects] = useState([]);
@@ -63,7 +63,7 @@
 //   // ✅ API CALLS
 //   const fetchProjects = async () => {
 //     try {
-//       const res = await axios.get("http://localhost:5000/api/projects");
+//       const res = await axios.get("${import.meta.env.VITE_API_URL}/api/projects");
 //       const allProjects = res.data || [];
 //       setProjects(allProjects);
       
@@ -81,7 +81,7 @@
 
 //   const fetchMyBids = async () => {
 //     try {
-//       const res = await axios.get("http://localhost:5000/api/bids/my-bids");
+//       const res = await axios.get("${import.meta.env.VITE_API_URL}/api/bids/my-bids");
 //       const acceptedBids = (res.data || []).filter(bid => 
 //         bid.status === "accepted" || bid.status === "hired" || bid.status === "won"
 //       );
@@ -524,7 +524,7 @@
 // import io from "socket.io-client";         
 // import { FaComment, FaUpload, FaFileUpload, FaDownload, FaEye } from "react-icons/fa";  
 
-// const socket = io("http://localhost:5000");  
+// const socket = io("${import.meta.env.VITE_API_URL}");  
 
 // const FreelancerDashboard = () => {
 //   const [projects, setProjects] = useState([]);
@@ -602,7 +602,7 @@
 //   // ✅ API CALLS
 //   const fetchProjects = async () => {
 //   try {
-//     const res = await axios.get("http://localhost:5000/api/projects");
+//     const res = await axios.get("${import.meta.env.VITE_API_URL}/api/projects");
 //     const allProjects = res.data || [];
 //     setProjects(allProjects);
     
@@ -629,7 +629,7 @@
 
 //   const fetchMyBids = async () => {
 //     try {
-//       const res = await axios.get("http://localhost:5000/api/bids/my-bids");
+//       const res = await axios.get("${import.meta.env.VITE_API_URL}/api/bids/my-bids");
 //       const acceptedBids = (res.data || []).filter(bid => 
 //         bid.status === "accepted" || bid.status === "hired" || bid.status === "won"
 //       );
@@ -664,7 +664,7 @@
 //     formData.append('freelancerName', 'John Doe');
 
 //     try {
-//       const res = await axios.post("http://localhost:5000/api/files/upload", formData, {
+//       const res = await axios.post("${import.meta.env.VITE_API_URL}/api/files/upload", formData, {
 //         headers: { 'Content-Type': 'multipart/form-data' },
 //         onUploadProgress: (progressEvent) => {
 //           const progress = Math.round(
@@ -1315,7 +1315,7 @@ import axios from "axios";
 import io from "socket.io-client";         
 import { FaComment, FaUpload, FaFileUpload, FaDownload, FaEye, FaStar, FaCreditCard, FaCheckCircle } from "react-icons/fa";  
 
-const socket = io("http://localhost:5000");  
+const socket = io("${import.meta.env.VITE_API_URL}");  
 
 const FreelancerDashboard = () => {
   const [projects, setProjects] = useState([]);
@@ -1412,7 +1412,7 @@ const FreelancerDashboard = () => {
   // ✅ FIXED fetchProjects - SHOWS PAID PROJECTS
   const fetchProjects = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/projects");
+      const res = await axios.get("${import.meta.env.VITE_API_URL}/api/projects");
       const allProjects = res.data || [];
       setProjects(allProjects);
       
@@ -1440,7 +1440,7 @@ const FreelancerDashboard = () => {
 
   const fetchMyBids = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/bids/my-bids");
+      const res = await axios.get("${import.meta.env.VITE_API_URL}/api/bids/my-bids");
       const acceptedBids = (res.data || []).filter(bid => 
         bid.status === "accepted" || bid.status === "hired" || bid.status === "won"
       );
@@ -1455,7 +1455,7 @@ const FreelancerDashboard = () => {
   const releaseFunds = async (project) => {
     if (window.confirm(`Release ₹${project.freelancerPayout || 0} payout for "${project.title}"?`)) {
       try {
-        await axios.post("http://localhost:5000/api/projects/release-funds", {
+        await axios.post("${import.meta.env.VITE_API_URL}/api/projects/release-funds", {
           projectId: project._id,
           freelancerId: "tempFreelancer"
         });
@@ -1498,7 +1498,7 @@ const FreelancerDashboard = () => {
     formData.append('freelancerName', 'John Doe');
 
     try {
-      const res = await axios.post("http://localhost:5000/api/files/upload", formData, {
+      const res = await axios.post("${import.meta.env.VITE_API_URL}/api/files/upload", formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         onUploadProgress: (progressEvent) => {
           const progress = Math.round(
@@ -1520,7 +1520,7 @@ const FreelancerDashboard = () => {
 
   const downloadFile = (fileUrl, fileName) => {
     const link = document.createElement('a');
-    link.href = `http://localhost:5000${fileUrl}`;
+    link.href = `${import.meta.env.VITE_API_URL}${fileUrl}`;
     link.download = fileName;
     document.body.appendChild(link);
     link.click();

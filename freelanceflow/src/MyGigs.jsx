@@ -9,7 +9,7 @@ const MyGigs = () => {
       try {
         const freelancerId = "tempFreelancer";
         const res = await axios.get(
-          `http://localhost:5000/api/projects/my-gigs/${freelancerId}`
+          `${import.meta.env.VITE_API_URL}/api/projects/my-gigs/${freelancerId}`
         );
         setGigs(res.data);
       } catch (error) {

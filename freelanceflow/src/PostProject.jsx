@@ -7,7 +7,7 @@
 // import { FaPlus, FaPaperPlane, FaEye, FaCheck, FaTimes, FaChartBar, FaBell, FaComments, FaClock, FaComment, FaDownload, FaFolderOpen, FaFileAlt, FaStar } from "react-icons/fa";
 // import "./PostProject.css";
 
-// const socket = io("http://localhost:5000");
+// const socket = io("${import.meta.env.VITE_API_URL}");
 
 // const messages = [
 //   "✨ Post your project and hire top freelancers",
@@ -130,7 +130,7 @@
     
 //     const fetchPostedProjects = async () => {
 //       try {
-//         const res = await axios.get("http://localhost:5000/api/projects");
+//         const res = await axios.get("${import.meta.env.VITE_API_URL}/api/projects");
 //         console.log("📊 DB projects:", res.data.length);
 //         setPostedProjects(res.data);
 //       } catch (error) {
@@ -146,7 +146,7 @@
 //   // 🔥 NEW RATING FUNCTIONS
 //   const markComplete = async (projectId) => {
 //     try {
-//       await axios.post("http://localhost:5000/api/projects/complete", { projectId });
+//       await axios.post("${import.meta.env.VITE_API_URL}/api/projects/complete", { projectId });
 //       alert("✅ Project marked complete! Please rate the freelancer.");
 //     } catch (error) {
 //       alert("Error marking complete");
@@ -161,7 +161,7 @@
 
 //   const submitRating = async () => {
 //     try {
-//       await axios.post("http://localhost:5000/api/projects/rate", {
+//       await axios.post("${import.meta.env.VITE_API_URL}/api/projects/rate", {
 //         projectId: showRatingModal,
 //         rating: tempRating,
 //         review: tempReview
@@ -178,7 +178,7 @@
 
 //   const fetchBids = async (projectId) => {
 //     try {
-//       const res = await axios.get(`http://localhost:5000/api/bids/project/${projectId}`);
+//       const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/bids/project/${projectId}`);
 //       setSelectedBids({ projectId, bids: res.data });
 //     } catch (error) {
 //       console.error("Error fetching bids:", error);
@@ -208,7 +208,7 @@
 //   // 🔥 NEW: Download file function
 //   const downloadFile = (fileUrl, fileName) => {
 //     const link = document.createElement('a');
-//     link.href = `http://localhost:5000${fileUrl}`;
+//     link.href = `${import.meta.env.VITE_API_URL}${fileUrl}`;
 //     link.download = fileName;
 //     document.body.appendChild(link);
 //     link.click();
@@ -635,7 +635,7 @@ import ChatModel from "./ChatModel";
 import { FaPlus, FaPaperPlane, FaEye, FaCheck, FaTimes, FaChartBar, FaBell, FaComments, FaClock, FaComment, FaDownload, FaFolderOpen, FaFileAlt, FaStar, FaCreditCard } from "react-icons/fa";
 import "./PostProject.css";
 
-const socket = io("http://localhost:5000");
+const socket = io("${import.meta.env.VITE_API_URL}");
 
 const messages = [
   "✨ Post your project and hire top freelancers",
@@ -775,7 +775,7 @@ const PostProject = () => {
     
     const fetchPostedProjects = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/projects");
+        const res = await axios.get("${import.meta.env.VITE_API_URL}/api/projects");
         console.log("📊 DB projects:", res.data.length);
         setPostedProjects(res.data);
       } catch (error) {
@@ -797,7 +797,7 @@ const PostProject = () => {
     try {
       console.log(`💳 Paying project: ${project.title}`);
       
-      const response = await axios.post("http://localhost:5000/api/payments/pay-project", {
+      const response = await axios.post("${import.meta.env.VITE_API_URL}/api/payments/pay-project", {
         projectId: project._id,
         amount: project.budget,
         freelancerId: project.freelancerId || "tempFreelancer"
@@ -816,7 +816,7 @@ const PostProject = () => {
   // 🔥 NEW RATING FUNCTIONS
   const markComplete = async (projectId) => {
     try {
-      await axios.post("http://localhost:5000/api/projects/complete", { projectId });
+      await axios.post("${import.meta.env.VITE_API_URL}/api/projects/complete", { projectId });
       alert("✅ Project marked complete! Please rate the freelancer.");
     } catch (error) {
       alert("Error marking complete");
@@ -831,7 +831,7 @@ const PostProject = () => {
 
   const submitRating = async () => {
     try {
-      await axios.post("http://localhost:5000/api/projects/rate", {
+      await axios.post("${import.meta.env.VITE_API_URL}/api/projects/rate", {
         projectId: showRatingModal,
         rating: tempRating,
         review: tempReview
@@ -848,7 +848,7 @@ const PostProject = () => {
 
   const fetchBids = async (projectId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/bids/project/${projectId}`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/bids/project/${projectId}`);
       setSelectedBids({ projectId, bids: res.data });
     } catch (error) {
       console.error("Error fetching bids:", error);
@@ -878,7 +878,7 @@ const PostProject = () => {
   // 🔥 NEW: Download file function
   const downloadFile = (fileUrl, fileName) => {
     const link = document.createElement('a');
-    link.href = `http://localhost:5000${fileUrl}`;
+    link.href = `${import.meta.env.VITE_API_URL}${fileUrl}`;
     link.download = fileName;
     document.body.appendChild(link);
     link.click();
