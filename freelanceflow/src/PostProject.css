@@ -38,8 +38,16 @@ body {
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 /* Buttons Base */
@@ -61,7 +69,7 @@ body {
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* New Project Button */
@@ -93,7 +101,7 @@ body {
   background: white;
   border-radius: 20px;
   padding: 1.75rem;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   border: 1px solid #f1f5f9;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
@@ -105,7 +113,7 @@ body {
 }
 
 .project-card:hover {
-  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
   transform: translateY(-8px);
 }
 
@@ -126,7 +134,7 @@ body {
   background: white;
   border-radius: 24px;
   padding: 3rem 2.5rem;
-  box-shadow: 0 25px 70px rgba(0,0,0,0.12);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.12);
 }
 
 .new-card h3 {
@@ -192,7 +200,7 @@ body {
   border-radius: 20px;
   font-weight: 600;
   font-size: 13px;
-  box-shadow: 0 4px 12px rgba(139,92,246,0.3);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
   margin-top: 0.75rem;
 }
 
@@ -210,21 +218,21 @@ body {
 .view-bids-btn {
   background: linear-gradient(135deg, #8b5cf6, #a78bfa);
   color: white;
-  box-shadow: 0 6px 20px rgba(139,92,246,0.3);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
 }
 
 /* PURPLE EDIT BUTTON */
 .edit-btn {
   background: linear-gradient(135deg, #a78bfa, #c084fc);
   color: white;
-  box-shadow: 0 6px 20px rgba(167,139,250,0.4);
+  box-shadow: 0 6px 20px rgba(167, 139, 250, 0.4);
 }
 
 /* PURPLE DELETE BUTTON */
 .delete-btn {
   background: linear-gradient(135deg, #c084fc, #e879f9);
   color: white;
-  box-shadow: 0 6px 20px rgba(232,121,249,0.4);
+  box-shadow: 0 6px 20px rgba(232, 121, 249, 0.4);
 }
 
 /* ONE INPUT PER ROW FORM */
@@ -252,7 +260,7 @@ body {
   color: #1e293b;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: inherit;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   min-height: 60px;
 }
 
@@ -260,7 +268,7 @@ body {
 .form-group textarea:focus {
   outline: none;
   border-color: #a78bfa;
-  box-shadow: 0 0 0 4px rgba(167,139,250,0.15), 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.15), 0 10px 30px rgba(0, 0, 0, 0.1);
   background: #fdfcff;
   transform: translateY(-1px);
 }
@@ -286,10 +294,10 @@ body {
   z-index: 2;
 }
 
-.form-group input:focus + label,
-.form-group input:not(:placeholder-shown) + label,
-.form-group textarea:focus + label,
-.form-group textarea:not(:placeholder-shown) + label {
+.form-group input:focus+label,
+.form-group input:not(:placeholder-shown)+label,
+.form-group textarea:focus+label,
+.form-group textarea:not(:placeholder-shown)+label {
   top: -9px;
   left: 1.25rem;
   font-size: 11px;
@@ -307,13 +315,13 @@ body {
   font-size: 16px;
   font-weight: 700;
   border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(139,92,246,0.3);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
   justify-content: center;
   margin-top: 0.75rem;
 }
 
 .post-btn:hover {
-  box-shadow: 0 16px 40px rgba(139,92,246,0.4);
+  box-shadow: 0 16px 40px rgba(139, 92, 246, 0.4);
   transform: translateY(-2px);
 }
 
@@ -333,8 +341,13 @@ body {
 }
 
 @keyframes modalFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .bids-overlay {
@@ -456,37 +469,38 @@ body {
   .dashboard-container {
     padding: 1.5rem 1rem;
   }
-  
+
   .projects-grid {
     grid-template-columns: 1fr;
     gap: 1.75rem;
   }
-  
+
   .new-card {
     padding: 2rem 1.5rem;
     margin-bottom: 2rem;
   }
-  
+
   .project-card {
     padding: 1.5rem;
     min-height: 400px;
   }
-  
+
   .card-buttons {
     flex-direction: column;
     gap: 0.75rem;
   }
-  
+
   .project-form {
     gap: 1.5rem;
   }
-  
+
   .bid-item {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
 }
+
 /* ✅ NEW STATS ONLY - Matches your purple theme */
 .stats-grid {
   display: grid;
@@ -503,7 +517,10 @@ body {
   text-align: center;
 }
 
-.stat-card svg { font-size: 2rem; margin-bottom: 10px; }
+.stat-card svg {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
 
 .notification-bell {
   background: #fef3c7;
@@ -516,6 +533,7 @@ body {
   gap: 10px;
   font-weight: bold;
 }
+
 /* ✅ NEW ENHANCED STYLES */
 .project-header {
   display: flex;
@@ -575,6 +593,7 @@ body {
 .project-details p {
   margin-bottom: 8px;
 }
+
 /* 🔥 NEW FILE VIEWER STYLES - ADD TO END OF PostProject.css */
 .files-section {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
@@ -603,7 +622,7 @@ body {
 }
 
 .file-item:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-color: #10b981;
 }
 
@@ -620,50 +639,72 @@ body {
 .download-btn:hover {
   background: #2563eb !important;
 }
-.complete-btn { background: linear-gradient(135deg, #059669, #10b981) !important; }
-.rate-btn { background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important; }
-.rating-display { 
-  padding: 8px 16px; 
-  background: linear-gradient(135deg, #fef3c7, #fde68a); 
-  border-radius: 25px; 
-  font-weight: bold; 
-  color: #92400e; 
-  display: inline-flex; 
+
+.complete-btn {
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+}
+
+.rate-btn {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+}
+
+.rating-display {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-radius: 25px;
+  font-weight: bold;
+  color: #92400e;
+  display: inline-flex;
   align-items: center;
 }
-.rating-stars { 
-  display: flex; gap: 5px; 
-  margin: 20px 0; 
-  font-size: 28px; 
+
+.rating-stars {
+  display: flex;
+  gap: 5px;
+  margin: 20px 0;
+  font-size: 28px;
 }
-.star { 
-  cursor: pointer; 
-  transition: color 0.2s; 
-  color: #d1d5db; 
+
+.star {
+  cursor: pointer;
+  transition: color 0.2s;
+  color: #d1d5db;
 }
-.star.active { color: #fbbf24; }
+
+.star.active {
+  color: #fbbf24;
+}
+
 .modal-overlay {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5); 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 1000;
 }
+
 .modal-content {
-  background: white; 
-  padding: 30px; 
-  border-radius: 16px; 
-  max-width: 500px; 
-  width: 90%; 
-  max-height: 90vh; 
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
   overflow-y: auto;
 }
+
 .modal-buttons {
-  display: flex; gap: 12px; 
-  justify-content: flex-end; 
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
   margin-top: 20px;
 }
+
 .submit-review-btn {
   background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
 }

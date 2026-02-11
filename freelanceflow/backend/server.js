@@ -40,9 +40,9 @@
 // app.post("/api/files/upload", upload.array("files", 10), async (req, res) => {
 //   try {
 //     const { projectId, freelancerId, freelancerName } = req.body;
-    
+
 //     if (!Project) return res.status(500).json({ error: "Project model not ready" });
-    
+
 //     const files = req.files.map(file => ({
 //       name: file.originalname,
 //       url: `/uploads/${file.filename}`,
@@ -143,7 +143,7 @@
 //   try {
 //     const { projectId } = req.body;
 //     if (!isValidObjectId(projectId)) return res.status(400).json({ error: "Invalid project" });
-    
+
 //     const project = await Project.findByIdAndUpdate(
 //       projectId,
 //       { 
@@ -152,7 +152,7 @@
 //       },
 //       { new: true }
 //     ).lean();
-    
+
 //     io.emit("project-completed", project);
 //     console.log(`✅ Project COMPLETED: ${project.title}`);
 //     res.json({ success: true, project });
@@ -165,7 +165,7 @@
 // app.post("/api/projects/rate", async (req, res) => {
 //   try {
 //     const { projectId, rating, review } = req.body;
-    
+
 //     const project = await Project.findByIdAndUpdate(
 //       projectId,
 //       { 
@@ -176,7 +176,7 @@
 //       },
 //       { new: true }
 //     ).lean();
-    
+
 //     io.emit("project-reviewed", project);
 //     console.log(`⭐ RATED: ${rating}/5 - ${project.title}`);
 //     res.json({ success: true, project });
@@ -286,7 +286,7 @@
 //       }
 //       socket.join(`chat-${projectId}`);
 //       console.log(`💬 ${senderName} joined chat-${projectId}`);
-      
+
 //       if (ChatMessage) {
 //         const messages = await ChatMessage.find({ projectId }).sort({ createdAt: 1 }).limit(50);
 //         socket.emit("chat-history", messages);
@@ -299,7 +299,7 @@
 //   socket.on("chat-message", async ({ projectId, message, senderName = "User" }) => {
 //     try {
 //       if (!isValidObjectId(projectId)) return;
-      
+
 //       const newMessage = new ChatMessage({
 //         projectId,
 //         message: message.trim(),
@@ -365,9 +365,9 @@
 // app.post("/api/files/upload", upload.array("files", 10), async (req, res) => {
 //   try {
 //     const { projectId, freelancerId, freelancerName } = req.body;
-    
+
 //     if (!Project) return res.status(500).json({ error: "Project model not ready" });
-    
+
 //     const files = req.files.map(file => ({
 //       name: file.originalname,
 //       url: `/uploads/${file.filename}`,
@@ -468,7 +468,7 @@
 //   try {
 //     const { projectId } = req.body;
 //     if (!isValidObjectId(projectId)) return res.status(400).json({ error: "Invalid project" });
-    
+
 //     const project = await Project.findByIdAndUpdate(
 //       projectId,
 //       { 
@@ -477,7 +477,7 @@
 //       },
 //       { new: true }
 //     ).lean();
-    
+
 //     io.emit("project-completed", project);
 //     console.log(`✅ Project COMPLETED: ${project.title}`);
 //     res.json({ success: true, project });
@@ -491,7 +491,7 @@
 // app.post("/api/projects/rate", async (req, res) => {
 //   try {
 //     const { projectId, rating, review } = req.body;
-    
+
 //     const project = await Project.findByIdAndUpdate(
 //       projectId,
 //       { 
@@ -502,7 +502,7 @@
 //       },
 //       { new: true }
 //     ).lean();
-    
+
 //     io.emit("project-reviewed", project);
 //     console.log(`⭐ RATED: ${rating}/5 - ${project.title}`);
 //     res.json({ success: true, project });
@@ -613,7 +613,7 @@
 //       }
 //       socket.join(`chat-${projectId}`);
 //       console.log(`💬 ${senderName} joined chat-${projectId}`);
-      
+
 //       if (ChatMessage) {
 //         const messages = await ChatMessage.find({ projectId }).sort({ createdAt: 1 }).limit(50);
 //         socket.emit("chat-history", messages);
@@ -626,7 +626,7 @@
 //   socket.on("chat-message", async ({ projectId, message, senderName = "User" }) => {
 //     try {
 //       if (!isValidObjectId(projectId)) return;
-      
+
 //       const newMessage = new ChatMessage({
 //         projectId,
 //         message: message.trim(),
@@ -770,7 +770,7 @@ app.post("/api/projects/rate", async (req, res) => {
     const { projectId, rating, review } = req.body;
     const project = await Project.findByIdAndUpdate(
       projectId,
-      { rating, review, reviewedAt: new Date() },
+      { rating, review, reviewedAt: new Date(), status: "reviewed" },
       { new: true }
     ).lean();
 
@@ -847,6 +847,25 @@ io.on("connection", (socket) => {
       if (project) io.emit("project-progress", project);
     } catch (error) {
       console.error("❌ Progress update failed:", error);
+    }
+  });
+
+  socket.on("delete-project", async (projectId) => {
+    console.log("🗑️ RECEIVED DELETE REQUEST:", projectId);
+    try {
+      if (!isValidObjectId(projectId)) {
+        console.log("❌ Invalid ID for deletion");
+        return;
+      }
+      const deleted = await Project.findByIdAndDelete(projectId);
+      if (deleted) {
+        io.emit("project-deleted", projectId);
+        console.log(`✅ Project deleted from DB: ${projectId}`);
+      } else {
+        console.log("⚠️ Project not found in DB");
+      }
+    } catch (error) {
+      console.error("❌ Delete failed:", error);
     }
   });
 
