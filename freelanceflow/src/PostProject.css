@@ -22,6 +22,7 @@ body {
 .animated-header {
   background: linear-gradient(135deg, #8b5cf6, #a78bfa);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 700;
@@ -33,6 +34,7 @@ body {
 .cursor {
   background: linear-gradient(135deg, #a78bfa, #c084fc);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: blink 1s infinite;
 }
@@ -707,4 +709,89 @@ body {
 
 .submit-review-btn {
   background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+}
+
+/* 🔥 PULSE BUTTON FOR DELIVERED APPROVAL */
+.pulse-button {
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+
+  70% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.project-card.delivered {
+  border-top: 5px solid #6366f1;
+  background: linear-gradient(to bottom, #f5f3ff, #ffffff);
+}
+
+/* 📋 CLIENT KANBAN VIEW STYLES */
+.client-kanban-view {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  margin: 15px 0;
+}
+
+.kanban-mini-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.kanban-mini-col {
+  background: #f1f5f9;
+  padding: 8px;
+  border-radius: 8px;
+  min-height: 80px;
+}
+
+.kanban-mini-label {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 800;
+  text-align: center;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.kanban-mini-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kanban-mini-card {
+  background: white;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #1e293b;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-left: 3px solid #6366f1;
+}
+
+.kanban-empty-mini {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 10px;
+  padding: 10px 0;
 }

@@ -30,7 +30,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    
+
     setIsLoading(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
@@ -38,10 +38,10 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      
+
       const data = await response.json();
       if (response.ok) {
-        login({ name: data.user.name, email: data.user.email });
+        login(data.user); // data.user includes name, email, and role
         navigate("/home");
       } else {
         setErrors({ general: data.message || 'Invalid credentials' });
@@ -75,7 +75,7 @@ const Login = () => {
         <motion.h1 className="auth-title">
           Sign In
         </motion.h1>
-        
+
         <motion.p className="auth-subtitle" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
           Access your FreelanceFlow account
         </motion.p>
@@ -118,8 +118,8 @@ const Login = () => {
             {errors.password && <span className="error-text">{errors.password}</span>}
           </div>
 
-          <motion.button 
-            type="submit" 
+          <motion.button
+            type="submit"
             className="submit-btn"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -133,7 +133,7 @@ const Login = () => {
           <span>or</span>
         </div>
 
-        <motion.button 
+        <motion.button
           className="clerk-btn"
           onClick={handleClerkLogin}
           whileHover={{ scale: 1.02 }}

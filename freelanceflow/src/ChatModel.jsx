@@ -1,23 +1,28 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
-import { FaPaperPlane, FaTimes } from "react-icons/fa";
+import { FaPaperPlane, FaTimes, FaPhone, FaPalette } from "react-icons/fa";
+import Vapi from "@vapi-ai/web";
+import Whiteboard from "./components/Whiteboard";
 import "./ChatModel.css";
 
 const socket = io(`${import.meta.env.VITE_API_URL}`);
+const vapi = new Vapi(import.meta.env.VITE_VAPI_PUBLIC_KEY);
 
-const ChatModel = ({ 
-  projectId, 
-  projectTitle, 
-  clientName, 
-  freelancerName, 
-  isOpen, 
+const ChatModel = ({
+  projectId,
+  projectTitle,
+  clientName,
+  freelancerName,
+  isOpen,
   onClose,
   userRole = "client",
-  userName 
+  userName
 }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [vapiActive, setVapiActive] = useState(false);
+  const [showWhiteboard, setShowWhiteboard] = useState(false);
   const messagesEndRef = useRef(null);
   const currentUserName = userName || clientName || "Client";
 
@@ -30,11 +35,11 @@ const ChatModel = ({
     if (!isOpen || !projectId) return;
 
     console.log("💬 Joining chat:", projectId, "as", currentUserName);
-    
+
     // 1. Join chat room
-    socket.emit("join-chat", { 
-      projectId, 
-      senderName: currentUserName 
+    socket.emit("join-chat", {
+      projectId,
+      senderName: currentUserName
     });
 
     // 2. Listen for chat HISTORY (server sends automatically)
@@ -60,6 +65,14 @@ const ChatModel = ({
     socket.on("new-chat-message", handleNewMessage);
     socket.on("chat-error", handleChatError);
 
+    // VAPI LISTENERS
+    vapi.on('call-start', () => setVapiActive(true));
+    vapi.on('call-end', () => setVapiActive(false));
+    vapi.on('error', (e) => {
+      console.error(e);
+      setVapiActive(false);
+    });
+
     // 5. Cleanup
     return () => {
       console.log("💬 Leaving chat:", projectId);
@@ -68,6 +81,32 @@ const ChatModel = ({
       socket.off("chat-error", handleChatError);
     };
   }, [isOpen, projectId, currentUserName]); // ✅ Perfect dependencies
+
+  const handleVoiceCall = async () => {
+    if (vapiActive) {
+      vapi.stop();
+      return;
+    }
+
+    try {
+      await vapi.start({
+        name: "FreelanceFlow Sync",
+        model: {
+          provider: "openai",
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: `You are an AI assistant facilitating a sync for the project: ${projectTitle}. Help the freelancer and client communicate.` }
+          ]
+        },
+        voice: { provider: "openai", voiceId: "alloy" },
+        transcriber: { provider: "deepgram", model: "nova-2", language: "en" },
+        firstMessage: `I'm joining the "${projectTitle}" sync. How can I assist?`
+      });
+    } catch (e) {
+      console.error("Vapi call failed", e);
+      alert("Voice Sync failed. Try text chat!");
+    }
+  };
 
   const sendMessage = (e) => {
     e.preventDefault();
@@ -94,11 +133,28 @@ const ChatModel = ({
             <h3>💬 {projectTitle}</h3>
             <span className="chat-participants">
               {clientName} ↔ {freelancerName || "Freelancer"}
+              {vapiActive && <span className="vapi-live-tag">🔴 LIVE CALL</span>}
             </span>
           </div>
-          <button className="chat-close-btn" onClick={onClose}>
-            <FaTimes />
-          </button>
+          <div className="chat-header-actions">
+            <button
+              className={`chat-action-btn ${vapiActive ? 'vapi-active' : ''}`}
+              onClick={handleVoiceCall}
+              title="Voice Call"
+            >
+              <FaPhone />
+            </button>
+            <button
+              className="chat-action-btn"
+              onClick={() => setShowWhiteboard(true)}
+              title="Whiteboard"
+            >
+              <FaPalette />
+            </button>
+            <button className="chat-close-btn" onClick={onClose}>
+              <FaTimes />
+            </button>
+          </div>
         </div>
 
         <div className="chat-messages">
@@ -108,7 +164,7 @@ const ChatModel = ({
             </div>
           ) : (
             messages.map((msg, index) => (
-              <div 
+              <div
                 key={msg._id || msg.timestamp || index}
                 className={`chat-message ${msg.senderName === currentUserName ? 'sent' : 'received'}`}
               >
@@ -116,7 +172,7 @@ const ChatModel = ({
                   <strong>{msg.senderName}</strong>
                   <p>{msg.message}</p>
                   <span className="message-time">
-                    {new Date(msg.createdAt || msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
+                    {new Date(msg.createdAt || msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
               </div>
@@ -138,6 +194,13 @@ const ChatModel = ({
           </button>
         </form>
       </div>
+
+      {showWhiteboard && (
+        <Whiteboard
+          projectId={projectId}
+          onClose={() => setShowWhiteboard(false)}
+        />
+      )}
     </div>
   );
 };

@@ -104,6 +104,17 @@ router.post("/", async (req, res) => {
   try {
     const { projectId, freelancerId, freelancerName, amount, deadline, message } = req.body;
 
+    // Check project status
+    const projectCheck = await Project.findById(projectId);
+    if (!projectCheck) return res.status(404).json({ error: "Project not found" });
+    if (projectCheck.status !== "open") {
+      return res.status(400).json({ error: "Bidding closed for this project" });
+    }
+
+    if (projectCheck.clientId === freelancerId) {
+      return res.status(403).json({ error: "You cannot bid on your own project" });
+    }
+
     const bid = new Bid({
       projectId,
       freelancerId,

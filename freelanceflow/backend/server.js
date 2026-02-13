@@ -785,11 +785,11 @@ app.post("/api/projects/rate", async (req, res) => {
 // -------------------- AUTH ROUTES --------------------
 app.post("/api/signup", async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     const existingUser = await User?.findOne({ email });
     if (existingUser) return res.status(400).json({ message: "User exists" });
 
-    const user = new User({ name, email, password });
+    const user = new User({ name, email, password, role: role || 'freelancer' });
     await user.save();
     res.json({ user });
   } catch (err) {
@@ -801,7 +801,11 @@ app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User?.findOne({ email });
-    if (!user || user.password !== password) return res.status(400).json({ message: "Invalid credentials" });
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+
     res.json({ user });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -839,14 +843,43 @@ io.on("connection", (socket) => {
   socket.on("update-progress", async ({ projectId, progress }) => {
     try {
       if (!isValidObjectId(projectId)) return;
-      const project = await Project.findByIdAndUpdate(
+
+      const project = await Project.findById(projectId);
+      if (!project) return;
+
+      let updateData = { progress, chatEnabled: progress >= 25 };
+
+      // Auto-transition: open -> accepted (via bid) -> in-progress (via work start)
+      if (progress > 0 && progress < 100 && project.status === "accepted") {
+        updateData.status = "in-progress";
+      }
+
+      const updated = await Project.findByIdAndUpdate(
         projectId,
-        { progress, chatEnabled: progress >= 25 },
+        updateData,
         { new: true }
       ).lean();
-      if (project) io.emit("project-progress", project);
+
+      if (updated) io.emit("project-progress", updated);
     } catch (error) {
       console.error("❌ Progress update failed:", error);
+    }
+  });
+
+  socket.on("deliver-project", async ({ projectId }) => {
+    try {
+      if (!isValidObjectId(projectId)) return;
+      const updated = await Project.findByIdAndUpdate(
+        projectId,
+        { status: "delivered", deliveredAt: new Date() },
+        { new: true }
+      ).lean();
+      if (updated) {
+        io.emit("project-progress", updated);
+        io.emit("project-delivered", updated);
+      }
+    } catch (error) {
+      console.error("❌ Delivery failed:", error);
     }
   });
 
@@ -871,6 +904,11 @@ io.on("connection", (socket) => {
 
   socket.on("new-bid", async (bidData) => {
     try {
+      const project = await Project.findById(bidData.projectId);
+      if (!project || project.status !== "open") {
+        return socket.emit("bid-error", { message: "Bidding closed" });
+      }
+
       const bid = new Bid(bidData);
       await bid.save();
       await Project.findByIdAndUpdate(bid.projectId, { $inc: { bidsCount: 1 } });

@@ -43,14 +43,14 @@ const Welcome = () => {
         >
           Welcome to <span className="gradient-text">FreelanceFlow</span>
         </motion.h1>
-        
+
         <motion.p
           className="welcome-subtitle"
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
         >
-          Connect clients & freelancers with real-time bidding, payments & chat. 
+          Connect clients & freelancers with real-time bidding, payments & chat.
           <span className="highlight"> Start your journey!</span>
         </motion.p>
 
@@ -69,7 +69,7 @@ const Welcome = () => {
           >
             🚀 Sign Up - Start Now
           </motion.button>
-          
+
           <motion.button
             className="btn btn-secondary"
             whileHover={{ scale: 1.03 }}
@@ -91,7 +91,7 @@ const Welcome = () => {
             <span className="feature-icon">⚡</span> Real-time Bidding
           </div>
           <div className="feature-item">
-            <span className="feature-icon">💳</span> Stripe Payments
+            <span className="feature-icon">🛡️</span> Secure Escrow
           </div>
           <div className="feature-item">
             <span className="feature-icon">💬</span> Live Chat

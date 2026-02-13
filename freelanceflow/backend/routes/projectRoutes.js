@@ -34,9 +34,9 @@
 //   try {
 //     const { id } = req.params;
 //     const { progress, chatEnabled } = req.body;
-    
+
 //     console.log(`📈 Updating project ${id}: ${progress}% (chat: ${chatEnabled})`);
-    
+
 //     const updatedProject = await Project.findByIdAndUpdate(
 //       id,
 //       { 
@@ -46,19 +46,19 @@
 //       },
 //       { new: true }
 //     );
-    
+
 //     if (!updatedProject) {
 //       return res.status(404).json({ message: "Project not found" });
 //     }
-    
+
 //     console.log("✅ Progress saved:", updatedProject.title, `${progress}%`);
-    
+
 //     // 🔥 REAL-TIME BROADCAST (clients see instantly)
 //     if (req.io) {
 //       req.io.emit('project-progress', updatedProject);
 //       console.log("🔥 Broadcasted to all clients");
 //     }
-    
+
 //     res.json({
 //       success: true,
 //       project: updatedProject,
@@ -85,11 +85,11 @@
 //       },
 //       { new: true }
 //     );
-    
+
 //     if (!updatedProject) {
 //       return res.status(404).json({ message: "Project not found" });
 //     }
-    
+
 //     res.json(updatedProject);
 //   } catch (error) {
 //     console.error(error);
@@ -359,6 +359,64 @@ router.put("/:id/progress", async (req, res) => {
     res.json(project);
   } catch (error) {
     console.error("❌ Progress update error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// =======================
+// ✅ KANBAN TASK ROUTES
+// =======================
+
+// 1. Add Task
+router.post("/:id/tasks", async (req, res) => {
+  try {
+    const { title } = req.body;
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ message: "Project not found" });
+
+    const newTask = { title, status: 'todo' };
+    project.tasks.push(newTask);
+    await project.save();
+
+    console.log(`✅ Task added to ${project._id}: ${title}`);
+    res.json(project);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// 2. Update Task Status
+router.put("/:id/tasks/:taskId", async (req, res) => {
+  try {
+    const { status } = req.body;
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ message: "Project not found" });
+
+    const task = project.tasks.id(req.params.taskId);
+    if (!task) return res.status(404).json({ message: "Task not found" });
+
+    task.status = status;
+    await project.save();
+
+    console.log(`✅ Task ${req.params.taskId} updated: ${status}`);
+    res.json(project);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// 3. Delete Task
+router.delete("/:id/tasks/:taskId", async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ message: "Project not found" });
+
+    project.tasks.pull({ _id: req.params.taskId });
+    await project.save();
+
+    console.log(`✅ Task ${req.params.taskId} deleted`);
+    res.json(project);
+  } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 });

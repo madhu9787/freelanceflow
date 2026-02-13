@@ -3,13 +3,16 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #f8f9fa, #ffffff); /* Elegant gradient background */
-  box-shadow: 0 4px 12px rgba(75, 0, 130, 0.15); /* Soft shadow for depth */
+  background: linear-gradient(135deg, #f8f9fa, #ffffff);
+  /* Elegant gradient background */
+  box-shadow: 0 4px 12px rgba(75, 0, 130, 0.15);
+  /* Soft shadow for depth */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   position: sticky;
   top: 0;
   z-index: 1000;
-  backdrop-filter: blur(8px); /* Glass-like blur effect */
+  backdrop-filter: blur(8px);
+  /* Glass-like blur effect */
   border-bottom: 1px solid rgba(75, 0, 130, 0.1);
   transition: background-color 0.3s ease;
 }
@@ -35,7 +38,7 @@
 
 .logo-icon:hover {
   transform: rotate(20deg) scale(1.1);
-  box-shadow: 0 6px 16px rgba(75,0,130,.25);
+  box-shadow: 0 6px 16px rgba(75, 0, 130, .25);
 }
 
 .app-name {
@@ -43,7 +46,7 @@
   font-size: 1.4rem;
   letter-spacing: 1px;
   color: #4B0082;
-  text-shadow: 1px 1px 2px rgba(75,0,130,0.2);
+  text-shadow: 1px 1px 2px rgba(75, 0, 130, 0.2);
   user-select: none;
   transition: color 0.3s ease;
 }
@@ -165,30 +168,34 @@
 
 @media (max-width: 768px) {
   .navbar {
-    background: rgba(255,255,255,0.85);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
   }
+
   .navbar-links {
     position: fixed;
     top: 60px;
     right: 0;
-    background: rgba(255,255,255,0.95);
+    background: rgba(255, 255, 255, 0.95);
     width: 220px;
     height: calc(100vh - 60px);
     flex-direction: column;
     padding: 2rem 1.5rem;
     transform: translateX(100%);
     transition: transform 0.3s ease;
-    box-shadow: -2px 0 12px rgba(0,0,0,0.1);
+    box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
     gap: 1.75rem;
   }
+
   .navbar-links.active {
     transform: translateX(0);
   }
+
   .menu-toggle {
     display: flex;
   }
 }
+
 .floating-chat-button {
   position: fixed;
   bottom: 25px;
@@ -210,6 +217,7 @@
   transform: scale(1.1);
   background-color: #6a0dad;
 }
+
 .nav-user {
   display: flex;
   align-items: center;
@@ -238,5 +246,132 @@
 }
 
 .navbar.scrolled {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* User Profile Dropdown */
+.user-profile-menu {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 12px;
+  border-radius: 15px;
+  transition: all 0.3s;
+}
+
+.user-profile-menu:hover {
+  background: rgba(75, 0, 130, 0.05);
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  width: 260px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(75, 0, 130, 0.08);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 2000;
+  transform-origin: top right;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.profile-avatar-large {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4b0082, #7b2ff7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  font-weight: 800;
+}
+
+.profile-info h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.profile-info p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.role-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+
+.role-tag.client {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.role-tag.freelancer {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.profile-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #555;
+  padding: 5px 0;
+}
+
+.detail-icon {
+  color: #4b0082;
+  opacity: 0.7;
+}
+
+.dropdown-logout-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ef4444;
+  background: white;
+  color: #ef4444;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dropdown-logout-btn:hover {
+  background: #ef4444;
+  color: white;
 }

@@ -1,12 +1,10 @@
-
-
-
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
 import io from "socket.io-client";
 import axios from "axios";
 import ChatModel from "./ChatModel";
 import { FaPlus, FaPaperPlane, FaEye, FaCheck, FaTimes, FaChartBar, FaBell, FaComments, FaClock, FaComment, FaDownload, FaFolderOpen, FaFileAlt, FaStar, FaCreditCard } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import "./PostProject.css";
 
 const socket = io(`${import.meta.env.VITE_API_URL}`);
@@ -19,6 +17,13 @@ const messages = [
 
 const PostProject = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && user.role !== 'client') {
+      navigate('/home');
+    }
+  }, [user, navigate]);
   const [typedText, setTypedText] = useState("");
   const [project, setProject] = useState({
     title: "", description: "", budget: "", duration: "",
@@ -132,6 +137,19 @@ const PostProject = () => {
       ]);
     });
 
+    socket.on("project-delivered", (project) => {
+      setNotifications(prev => [
+        ...prev.slice(-4),
+        {
+          id: Date.now(),
+          message: `🚀 "${project.title}" has been delivered for approval!`
+        }
+      ]);
+      setPostedProjects(prev =>
+        prev.map(p => p._id === project._id ? project : p)
+      );
+    });
+
     return () => {
       socket.off("projects");
       socket.off("new-project");
@@ -142,6 +160,7 @@ const PostProject = () => {
       socket.off("project-funded");
       socket.off("project-completed");
       socket.off("project-deleted");
+      socket.off("project-delivered");
     };
   }, []);
 
@@ -183,7 +202,7 @@ const PostProject = () => {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/payments/pay-project`, {
         projectId: project._id,
         amount: project.budget,
-        freelancerId: project.freelancerId || "tempFreelancer"
+        freelancerId: project.freelancerId
       });
 
       alert(`✅ ${response.data.message}\n💰 Funds locked: ₹${project.budget}`);
@@ -198,11 +217,25 @@ const PostProject = () => {
 
   // 🔥 NEW RATING FUNCTIONS
   const markComplete = async (projectId) => {
+    if (!window.confirm("Are you sure you want to approve this work and release payment (if funded)?")) return;
+
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/projects/complete`, { projectId });
-      alert("✅ Project marked complete! Please rate the freelancer.");
+      const project = postedProjects.find(p => p._id === projectId);
+
+      if (project.paymentStatus === 'funded') {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/payments/release-payment`, { projectId });
+        alert(`✅ Work approved! ₹${res.data.project.escrowAmount} has been released to ${res.data.project.freelancerName}.`);
+      } else {
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/projects/complete`, { projectId });
+        alert("✅ Project marked complete! Please rate the freelancer.");
+      }
+
+      // Refresh list
+      const projectsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects`);
+      setPostedProjects(projectsRes.data);
     } catch (error) {
-      alert("Error marking complete");
+      console.error("Error completing project:", error);
+      alert("Error marking complete or releasing payment");
     }
   };
 
@@ -292,6 +325,7 @@ const PostProject = () => {
         duration: project.duration || "Not specified",
         skills: project.skills,
         clientName: user?.name || "Client",
+        clientId: user?._id,
         status: "open",
         bidsCount: 0,
         progress: 0,
@@ -326,6 +360,7 @@ const PostProject = () => {
     switch (status) {
       case 'accepted': return '#10b981';
       case 'in-progress': return '#f59e0b';
+      case 'delivered': return '#6366f1';
       case 'completed': return '#059669';
       case 'reviewed': return '#8b5cf6';
       default: return '#6b7280';
@@ -372,7 +407,7 @@ const PostProject = () => {
         </div>
       )}
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px', gap: '15px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
         <button
           className="btn new-project-btn"
           onClick={() => {
@@ -385,14 +420,6 @@ const PostProject = () => {
           }}
         >
           <FaPlus /> New Project
-        </button>
-
-        <button
-          className="btn"
-          style={{ background: '#4b5563', color: 'white' }}
-          onClick={() => window.location.href = '/find-projects'}
-        >
-          Switch to Freelancer Mode 🔄
         </button>
       </div>
 
@@ -579,12 +606,16 @@ const PostProject = () => {
                   )}
 
                   {/* 🔥 NEW: COMPLETE & RATING BUTTONS */}
-                  {p.status === 'accepted' && p.progress >= 100 && !p.rating && (
+                  {(p.status === 'accepted' || p.status === 'in-progress' || p.status === 'delivered') && p.progress >= 100 && !p.rating && (
                     <button
-                      className="btn complete-btn"
+                      className={`btn complete-btn ${p.status === 'delivered' ? 'pulse-button' : ''}`}
                       onClick={() => markComplete(p._id)}
+                      style={{
+                        background: p.status === 'delivered' ? '#059669' : '#10b981',
+                        border: p.status === 'delivered' ? '2px solid #fff' : 'none'
+                      }}
                     >
-                      ✅ Mark Complete
+                      {p.status === 'delivered' ? '✅ Approve & Complete' : '✅ Mark Complete'}
                     </button>
                   )}
 

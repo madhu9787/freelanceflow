@@ -485,6 +485,7 @@ const Signup = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    role: 'freelancer',
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -508,22 +509,23 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    
+
     setIsLoading(true);
     try {
-      const response = await fetch('${import.meta.env.VITE_API_URL}/api/signup', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           password: formData.password,
+          role: formData.role,
         }),
       });
-      
+
       const data = await response.json();
       if (response.ok) {
-        login({ name: data.user.name, email: data.user.email });
+        login(data.user);
         navigate("/home");
       } else {
         setErrors({ general: data.message || 'Signup failed' });
@@ -559,7 +561,7 @@ const Signup = () => {
         <motion.h1 className="auth-title">
           Sign Up
         </motion.h1>
-        
+
         <motion.p className="auth-subtitle" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
           Create your FreelanceFlow account
         </motion.p>
@@ -599,6 +601,34 @@ const Signup = () => {
             {errors.email && <span className="error-text">{errors.email}</span>}
           </div>
 
+          <div className="role-selection">
+            <label className="role-label">I am a:</label>
+            <div className="role-options">
+              <label className={`role-card ${formData.role === 'freelancer' ? 'active' : ''}`}>
+                <input
+                  type="radio"
+                  name="role"
+                  value="freelancer"
+                  checked={formData.role === 'freelancer'}
+                  onChange={handleChange}
+                />
+                <div className="role-icon">👨‍💻</div>
+                <span>Freelancer</span>
+              </label>
+              <label className={`role-card ${formData.role === 'client' ? 'active' : ''}`}>
+                <input
+                  type="radio"
+                  name="role"
+                  value="client"
+                  checked={formData.role === 'client'}
+                  onChange={handleChange}
+                />
+                <div className="role-icon">💼</div>
+                <span>Client</span>
+              </label>
+            </div>
+          </div>
+
           <div className="input-group">
             <FaLock className="input-icon" />
             <input
@@ -633,8 +663,8 @@ const Signup = () => {
             {errors.confirmPassword && <span className="error-text">{errors.confirmPassword}</span>}
           </div>
 
-          <motion.button 
-            type="submit" 
+          <motion.button
+            type="submit"
             className="submit-btn"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -648,7 +678,7 @@ const Signup = () => {
           <span>or</span>
         </div>
 
-        <motion.button 
+        <motion.button
           className="clerk-btn"
           onClick={handleClerkSignup}
           whileHover={{ scale: 1.02 }}
@@ -660,8 +690,8 @@ const Signup = () => {
         <p className="auth-footer">
           Already have an account? <span onClick={() => navigate('/login')}>Sign in</span>
         </p>
-      </div>
-    </motion.div>
+      </div >
+    </motion.div >
   );
 };
 
