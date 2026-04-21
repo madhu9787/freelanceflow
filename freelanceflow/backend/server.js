@@ -421,6 +421,30 @@ app.get("/api/projects", async (req, res) => {
   }
 });
 
+app.post("/api/projects", async (req, res) => {
+  try {
+    const projectData = req.body;
+    const project = new Project({ ...projectData, status: "open", bidsCount: 0, progress: 0, chatEnabled: true });
+    await project.save();
+    global.io?.emit("new-project", project);
+    res.json({ success: true, project });
+  } catch (error) {
+    console.error("❌ HTTP Post Project Error:", error);
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.put("/api/projects/:id", async (req, res) => {
+  try {
+    const updated = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    global.io?.emit("project-progress", updated); // Or another event
+    res.json({ success: true, project: updated });
+  } catch (error) {
+    console.error("❌ HTTP Put Project Error:", error);
+    res.status(400).json({ error: error.message });
+  }
+});
+
 app.post("/api/projects/complete", async (req, res) => {
   try {
     const { projectId } = req.body;
@@ -433,6 +457,23 @@ app.post("/api/projects/complete", async (req, res) => {
       { new: true }
     );
 
+    global.io?.emit("project-completed", project);
+    res.json({ success: true, project });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/api/projects/rate", async (req, res) => {
+  try {
+    const { projectId, rating, review } = req.body;
+    const project = await Project.findByIdAndUpdate(
+      projectId,
+      { rating, review, reviewedAt: new Date(), status: "reviewed" },
+      { new: true }
+    );
+
+    global.io?.emit("project-reviewed", project);
     res.json({ success: true, project });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -458,6 +499,7 @@ app.post("/api/files/upload", upload.array("files", 10), async (req, res) => {
       { new: true }
     );
 
+    global.io?.emit("file-upload-complete", { projectId, files });
     res.json({ success: true, files, project: updatedProject });
 
   } catch (error) {
@@ -469,9 +511,132 @@ app.post("/api/files/upload", upload.array("files", 10), async (req, res) => {
 // -------------------- SOCKET.IO --------------------
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
+global.io = io;
 
 io.on("connection", (socket) => {
   console.log(`🟢 Socket ${socket.id} connected`);
+
+  socket.on("join", async ({ role }) => {
+    socket.join(role);
+    if (Project) {
+      const projects = await Project.find().sort({ createdAt: -1 }).limit(20);
+      socket.emit("projects", projects);
+    }
+  });
+
+  socket.on("post-project", async (projectData) => {
+    try {
+      const { _id, ...cleanData } = projectData;
+      const project = new Project({ ...cleanData, status: "open", bidsCount: 0, progress: 0, chatEnabled: true });
+      await project.save();
+      io.emit("new-project", project);
+      socket.emit("project-posted", { success: true, project });
+    } catch (error) {
+      console.error("❌ Post Project Error:", error);
+      socket.emit("post-error", { error: error.message });
+    }
+  });
+
+  socket.on("update-progress", async ({ projectId, progress }) => {
+    try {
+      if (!isValidObjectId(projectId)) return;
+
+      const project = await Project.findById(projectId);
+      if (!project) return;
+
+      let updateData = { progress, chatEnabled: progress >= 25 };
+
+      if (progress > 0 && progress < 100 && project.status === "accepted") {
+        updateData.status = "in-progress";
+      }
+
+      const updated = await Project.findByIdAndUpdate(
+        projectId,
+        updateData,
+        { new: true }
+      ).lean();
+
+      if (updated) io.emit("project-progress", updated);
+    } catch (error) {
+      console.error("❌ Progress update failed:", error);
+    }
+  });
+
+  socket.on("deliver-project", async ({ projectId }) => {
+    try {
+      if (!isValidObjectId(projectId)) return;
+      const updated = await Project.findByIdAndUpdate(
+        projectId,
+        { status: "delivered", deliveredAt: new Date() },
+        { new: true }
+      ).lean();
+      if (updated) {
+        io.emit("project-progress", updated);
+        io.emit("project-delivered", updated);
+      }
+    } catch (error) {
+      console.error("❌ Delivery failed:", error);
+    }
+  });
+
+  socket.on("delete-project", async (projectId) => {
+    console.log("🗑️ RECEIVED DELETE REQUEST:", projectId);
+    try {
+      if (!isValidObjectId(projectId)) {
+        console.log("❌ Invalid ID for deletion");
+        return;
+      }
+      const deleted = await Project.findByIdAndDelete(projectId);
+      if (deleted) {
+        io.emit("project-deleted", projectId);
+        console.log(`✅ Project deleted from DB: ${projectId}`);
+      } else {
+        console.log("⚠️ Project not found in DB");
+      }
+    } catch (error) {
+      console.error("❌ Delete failed:", error);
+    }
+  });
+
+  socket.on("new-bid", async (bidData) => {
+    try {
+      const project = await Project.findById(bidData.projectId);
+      if (!project || project.status !== "open") {
+        return socket.emit("bid-error", { message: "Bidding closed" });
+      }
+
+      const bid = new Bid(bidData);
+      await bid.save();
+      await Project.findByIdAndUpdate(bid.projectId, { $inc: { bidsCount: 1 } });
+      io.emit("new-bid", bid);
+    } catch (error) {
+      console.error("❌ Bid save failed:", error);
+    }
+  });
+
+  socket.on("join-chat", async ({ projectId, senderName = "User" }) => {
+    try {
+      if (!isValidObjectId(projectId)) return socket.emit("chat-error", { message: "Invalid project" });
+      socket.join(`chat-${projectId}`);
+      if (ChatMessage) {
+        const messages = await ChatMessage.find({ projectId }).sort({ createdAt: 1 }).limit(50);
+        socket.emit("chat-history", messages);
+      }
+    } catch (error) {
+      socket.emit("chat-error", { message: "Chat failed" });
+    }
+  });
+
+  socket.on("chat-message", async ({ projectId, message, senderName = "User" }) => {
+    try {
+      if (!isValidObjectId(projectId)) return;
+      const newMessage = new ChatMessage({ projectId, message: message.trim(), senderName });
+      await newMessage.save();
+      io.to(`chat-${projectId}`).emit("new-chat-message", newMessage);
+    } catch (error) {
+      socket.emit("chat-error", { message: "Send failed" });
+    }
+  });
 
   socket.on("disconnect", () =>
     console.log(`🔴 ${socket.id} disconnected`)

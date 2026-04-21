@@ -150,6 +150,11 @@ const PostProject = () => {
       );
     });
 
+    socket.on("post-error", (err) => {
+      console.error("❌ Post project error from server:", err);
+      alert("Failed to post project: " + err.error);
+    });
+
     return () => {
       socket.off("projects");
       socket.off("new-project");
@@ -161,6 +166,7 @@ const PostProject = () => {
       socket.off("project-completed");
       socket.off("project-deleted");
       socket.off("project-delivered");
+      socket.off("post-error");
     };
   }, []);
 
@@ -313,36 +319,46 @@ const PostProject = () => {
       return alert("Fill required fields");
     }
 
-    if (editId) {
-      setPostedProjects(prev => prev.map(p => (p._id === editId ? { ...p, ...project } : p)));
-      setEditId(null);
-      alert("Project updated!");
-    } else {
-      const newProject = {
-        title: project.title,
-        description: project.description,
-        budget: project.budget,
-        duration: project.duration || "Not specified",
-        skills: project.skills,
-        clientName: user?.name || "Client",
-        clientId: user?._id,
-        status: "open",
-        bidsCount: 0,
-        progress: 0,
-        chatEnabled: true,
-        files: [],
-        messagesCount: 0
-      };
+    try {
+      if (editId) {
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/projects/${editId}`, project);
+        setPostedProjects(prev => prev.map(p => (p._id === editId ? { ...p, ...project } : p)));
+        setEditId(null);
+        alert("✅ Project updated!");
+      } else {
+        const newProject = {
+          title: project.title,
+          description: project.description,
+          budget: project.budget,
+          duration: project.duration || "Not specified",
+          skills: project.skills,
+          clientName: user?.name || "Client",
+          clientId: user?._id || user?.id || "guest-client-id",
+          status: "open",
+          bidsCount: 0,
+          progress: 0,
+          chatEnabled: true,
+          files: [],
+          messagesCount: 0
+        };
 
-      console.log("📤 Posting project:", newProject.title);
-      socket.emit("post-project", newProject);
+        console.log("📤 Posting project via HTTP:", newProject.title);
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/projects`, newProject);
+        // The rest of the clients will receive it via socket emit from the server.
+        // It's also safe to add locally if we don't wait for socket:
+        // setPostedProjects(prev => [res.data.project, ...prev]);
+        alert("✅ Project posted successfully!");
+      }
+
+      setProject({
+        title: "", description: "", budget: "", duration: "",
+        skills: "", type: "", experience: "", category: "", clientType: ""
+      });
+      setShowNewCard(false);
+    } catch (err) {
+      console.error("HTTP error:", err);
+      alert("Failed to submit project: " + (err.response?.data?.error || err.message));
     }
-
-    setProject({
-      title: "", description: "", budget: "", duration: "",
-      skills: "", type: "", experience: "", category: "", clientType: ""
-    });
-    setShowNewCard(false);
   };
 
   const handleEdit = p => {
