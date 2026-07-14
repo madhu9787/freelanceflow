@@ -11,9 +11,9 @@ router.post("/", async (req, res) => {
         const { message } = req.body;
 
         const response = await axios.post(
-            "https://api.sambanova.ai/v1/chat/completions",
+            "https://api.groq.com/openai/v1/chat/completions",
             {
-                model: "Meta-Llama-3.3-70B-Instruct",
+                model: "llama-3.3-70b-versatile",
                 messages: [
                     { role: "system", content: "You are an AI assistant for FreelanceFlow." },
                     { role: "user", content: message }
@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
             },
             {
                 headers: {
-                    Authorization: `Bearer ${process.env.SAMBANOVA_API_KEY}`,
+                    Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
                     "Content-Type": "application/json"
                 }
             }
@@ -59,9 +59,9 @@ Write a compelling, professional bid proposal (150-200 words) that:
 Write ONLY the proposal text, no extra formatting or labels.`;
 
         const response = await axios.post(
-            "https://api.sambanova.ai/v1/chat/completions",
+            "https://api.groq.com/openai/v1/chat/completions",
             {
-                model: "Meta-Llama-3.3-70B-Instruct",
+                model: "llama-3.3-70b-versatile",
                 messages: [
                     { role: "system", content: "You are an expert freelance proposal writer. Write concise, professional, and persuasive bid proposals." },
                     { role: "user", content: prompt }
@@ -71,7 +71,7 @@ Write ONLY the proposal text, no extra formatting or labels.`;
             },
             {
                 headers: {
-                    Authorization: `Bearer ${process.env.SAMBANOVA_API_KEY}`,
+                    Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
                     "Content-Type": "application/json"
                 }
             }

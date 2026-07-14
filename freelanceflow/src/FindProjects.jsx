@@ -1,5 +1,4 @@
 
-
 import React, { useEffect, useState, useRef, useContext } from "react";
 import axios from "axios";
 import io from "socket.io-client";
@@ -8,6 +7,17 @@ import { FaComment, FaUpload, FaFileUpload, FaDownload, FaEye, FaStar, FaCreditC
 import { useNavigate } from "react-router-dom";
 import Vapi from "@vapi-ai/web";
 import Whiteboard from "./components/Whiteboard";
+
+
+
+
+
+
+
+
+
+
+
 
 const socket = io(`${import.meta.env.VITE_API_URL}`);
 const vapi = new Vapi(import.meta.env.VITE_VAPI_PUBLIC_KEY);
