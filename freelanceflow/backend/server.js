@@ -524,7 +524,8 @@ io.on("connection", (socket) => {
     socket.join(role);
     if (Project) {
       const filter = {};
-      if (role === 'client' && clientId) {
+      if (role === 'client') {
+        if (!clientId) return; // Do not fetch all projects if clientId is missing
         filter.clientId = clientId;
       }
       const projects = await Project.find(filter).sort({ createdAt: -1 }).limit(20);
