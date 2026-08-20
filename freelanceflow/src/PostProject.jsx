@@ -77,19 +77,30 @@ const PostProject = () => {
 
     socket.on("new-project", (project) => {
       console.log("🆕 New project via socket:", project.title);
-      setPostedProjects(prev => [project, ...prev]);
+      const currentClientId = user?._id || user?.id;
+      if (project.clientId === currentClientId) {
+        setPostedProjects(prev => [project, ...prev]);
+      }
     });
 
     socket.on("new-bid", (bid) => {
       console.log("💰 New bid:", bid.freelancerName);
-      setNotifications(prev => [...prev.slice(-4), {
-        id: Date.now(),
-        message: `💰 New bid from ${bid.freelancerName}`
-      }]);
+      setPostedProjects(prev => {
+        if (prev.some(p => p._id === bid.projectId)) {
+          setNotifications(n => [...n.slice(-4), {
+            id: Date.now(),
+            message: `💰 New bid from ${bid.freelancerName}`
+          }]);
+        }
+        return prev;
+      });
     });
 
     socket.on("project-progress", (updatedProject) => {
       console.log("🔥 LIVE PROGRESS:", updatedProject.title, `${updatedProject.progress}%`);
+      const currentClientId = user?._id || user?.id;
+      if (updatedProject.clientId !== currentClientId) return;
+
       setPostedProjects(prev =>
         prev.map(p => p._id === updatedProject._id ? updatedProject : p)
       );
@@ -104,17 +115,25 @@ const PostProject = () => {
 
     // 🔥 NEW: File upload notifications
     socket.on("file-upload-complete", ({ projectId, fileName }) => {
-      setNotifications(prev => [
-        ...prev.slice(-4),
-        {
-          id: Date.now(),
-          message: `📁 New file uploaded to project: ${fileName}`
+      setPostedProjects(prev => {
+        if (prev.some(p => p._id === projectId)) {
+          setNotifications(n => [
+            ...n.slice(-4),
+            {
+              id: Date.now(),
+              message: `📁 New file uploaded to project: ${fileName}`
+            }
+          ]);
         }
-      ]);
+        return prev;
+      });
     });
 
     // 🔥 NEW: Payment notifications
     socket.on("project-funded", (project) => {
+      const currentClientId = user?._id || user?.id;
+      if (project.clientId !== currentClientId) return;
+      
       setNotifications(prev => [
         ...prev.slice(-4),
         {
@@ -129,6 +148,9 @@ const PostProject = () => {
 
     // 🔥 NEW: Rating notifications
     socket.on("project-completed", (project) => {
+      const currentClientId = user?._id || user?.id;
+      if (project.clientId !== currentClientId) return;
+
       setNotifications(prev => [
         ...prev.slice(-4),
         {
@@ -139,6 +161,9 @@ const PostProject = () => {
     });
 
     socket.on("project-delivered", (project) => {
+      const currentClientId = user?._id || user?.id;
+      if (project.clientId !== currentClientId) return;
+
       setNotifications(prev => [
         ...prev.slice(-4),
         {
@@ -185,9 +210,9 @@ const PostProject = () => {
     const fetchPostedProjects = async () => {
       try {
         const currentClientId = user?._id || user?.id;
-        const url = currentClientId 
-          ? `${import.meta.env.VITE_API_URL}/api/projects?clientId=${currentClientId}`
-          : `${import.meta.env.VITE_API_URL}/api/projects`;
+        if (!currentClientId) return; // Don't fetch if no user ID
+        
+        const url = `${import.meta.env.VITE_API_URL}/api/projects?clientId=${currentClientId}`;
         const res = await axios.get(url);
         console.log("📊 DB projects:", res.data.length);
         setPostedProjects(res.data);
