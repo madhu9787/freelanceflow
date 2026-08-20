@@ -5,11 +5,16 @@ import Project from "../models/Project.js";
 const router = express.Router();
 
 // =======================
-// ✅ GET ALL PROJECTS
+// ✅ GET ALL PROJECTS (Filtered by clientId if provided)
 // =======================
 router.get("/", async (req, res) => {
   try {
-    const projects = await Project.find({}).sort({ createdAt: -1 });
+    const { clientId } = req.query;
+    let query = {};
+    if (clientId) {
+      query.clientId = clientId;
+    }
+    const projects = await Project.find(query).sort({ createdAt: -1 });
     console.log("✅ All projects fetched:", projects.length);
     res.json(projects);
   } catch (err) {

@@ -67,7 +67,8 @@ const PostProject = () => {
   useEffect(() => {
     console.log("🔥 Client: Joining as 'client'...");
 
-    socket.emit("join", { role: "client" });
+    const currentClientId = user?._id || user?.id;
+    socket.emit("join", { role: "client", clientId: currentClientId });
 
     socket.on("projects", (projects) => {
       console.log("📡 Socket projects:", projects.length);
@@ -168,7 +169,7 @@ const PostProject = () => {
       socket.off("project-delivered");
       socket.off("post-error");
     };
-  }, []);
+  }, [user]);
 
   // Handle deletions in real-time
   useEffect(() => {
@@ -183,7 +184,11 @@ const PostProject = () => {
 
     const fetchPostedProjects = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects`);
+        const currentClientId = user?._id || user?.id;
+        const url = currentClientId 
+          ? `${import.meta.env.VITE_API_URL}/api/projects?clientId=${currentClientId}`
+          : `${import.meta.env.VITE_API_URL}/api/projects`;
+        const res = await axios.get(url);
         console.log("📊 DB projects:", res.data.length);
         setPostedProjects(res.data);
       } catch (error) {
@@ -194,7 +199,7 @@ const PostProject = () => {
     fetchPostedProjects();
     const interval = setInterval(fetchPostedProjects, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [user]);
 
   // 🔥 NEW PAYMENT FUNCTION
   const handlePayment = async (project) => {
@@ -237,7 +242,8 @@ const PostProject = () => {
       }
 
       // Refresh list
-      const projectsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects`);
+      const currentClientId = user?._id || user?.id;
+      const projectsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects${currentClientId ? `?clientId=${currentClientId}` : ''}`);
       setPostedProjects(projectsRes.data);
     } catch (error) {
       console.error("Error completing project:", error);
@@ -293,7 +299,8 @@ const PostProject = () => {
       alert("✅ Freelancer hired! Project assigned.");
       setSelectedBids(null);
       // Refresh projects to see updated status
-      const projectsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects`);
+      const currentClientId = user?._id || user?.id;
+      const projectsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects${currentClientId ? `?clientId=${currentClientId}` : ''}`);
       setPostedProjects(projectsRes.data);
     } catch (error) {
       console.error("Accept bid failed:", error);

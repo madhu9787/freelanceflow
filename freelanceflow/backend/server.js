@@ -412,7 +412,11 @@ app.post("/api/login", async (req, res) => {
 // -------------------- PROJECT ROUTES --------------------
 app.get("/api/projects", async (req, res) => {
   try {
-    const projects = await Project.find()
+    const filter = {};
+    if (req.query.clientId) {
+      filter.clientId = req.query.clientId;
+    }
+    const projects = await Project.find(filter)
       .sort({ createdAt: -1 })
       .lean();
     res.json(projects);
@@ -516,10 +520,14 @@ global.io = io;
 io.on("connection", (socket) => {
   console.log(`🟢 Socket ${socket.id} connected`);
 
-  socket.on("join", async ({ role }) => {
+  socket.on("join", async ({ role, clientId }) => {
     socket.join(role);
     if (Project) {
-      const projects = await Project.find().sort({ createdAt: -1 }).limit(20);
+      const filter = {};
+      if (role === 'client' && clientId) {
+        filter.clientId = clientId;
+      }
+      const projects = await Project.find(filter).sort({ createdAt: -1 }).limit(20);
       socket.emit("projects", projects);
     }
   });
