@@ -49,7 +49,8 @@ Rules:
                     { role: "user", content: message }
                 ],
                 temperature: 0.5,
-                max_tokens: 400
+                max_tokens: 600,
+                reasoning_effort: "none"
             },
             {
                 headers: {
@@ -100,7 +101,8 @@ Write ONLY the proposal text, no extra formatting, labels, thinking, or reasonin
                     { role: "user", content: prompt }
                 ],
                 temperature: 0.5,
-                max_tokens: 1000
+                max_tokens: 1500,
+                reasoning_effort: "none"
             },
             {
                 headers: {
