@@ -3,29 +3,21 @@
 import React, { useContext, useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
-import { useClerk, useUser } from "@clerk/clerk-react";
 import "./NavBar.css";
 
 import { FaUser, FaEnvelope, FaBriefcase, FaSignOutAlt, FaCaretDown } from "react-icons/fa";
 
 const NavBar = () => {
   const { user, logout } = useContext(AuthContext);
-  const { signOut } = useClerk();
-  const { isSignedIn, user: clerkUser } = useUser();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    try {
-      if (isSignedIn) await signOut();
-      logout();
-      navigate("/");
-    } catch (err) {
-      console.error("Logout error:", err);
-    }
+  const handleLogout = () => {
+    logout();
+    navigate("/");
   };
 
   useEffect(() => {
@@ -34,18 +26,8 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (isSignedIn && clerkUser && !user) {
-      navigate("/home");
-    }
-  }, [isSignedIn, clerkUser]);
-
-  const displayName =
-    user?.name ||
-    clerkUser?.firstName ||
-    clerkUser?.emailAddresses?.[0]?.emailAddress;
-
-  const displayEmail = user?.email || clerkUser?.primaryEmailAddress?.emailAddress;
+  const displayName = user?.name;
+  const displayEmail = user?.email;
   const avatarLetter = displayName ? displayName.charAt(0).toUpperCase() : "U";
 
   return (
@@ -92,7 +74,7 @@ const NavBar = () => {
           </>
         )}
 
-        {(user || isSignedIn) && (
+        {user && (
           <div className="user-profile-menu" onClick={() => setProfileOpen(!profileOpen)}>
             <div className="avatar">{avatarLetter}</div>
             <span style={{ color: '#4B0082', fontWeight: 600 }}>{displayName}</span>

@@ -3,14 +3,12 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AuthContext } from './AuthContext';
-import { useClerk } from '@clerk/clerk-react';
 import { FaEnvelope, FaLock } from 'react-icons/fa6';
 import './Auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
-  const { openSignIn } = useClerk();
 
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
@@ -52,8 +50,6 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-
-  const handleClerkLogin = () => openSignIn({ redirectUrl: '/home' });
 
   return (
     <motion.div
@@ -129,19 +125,6 @@ const Login = () => {
           </motion.button>
         </motion.form>
 
-        <div className="divider">
-          <span>or</span>
-        </div>
-
-        <motion.button
-          className="clerk-btn"
-          onClick={handleClerkLogin}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          Continue with Clerk
-        </motion.button>
-
         <p className="auth-footer">
           Don't have an account? <span onClick={() => navigate('/signup')}>Sign up</span>
         </p>
@@ -151,3 +134,4 @@ const Login = () => {
 };
 
 export default Login;
+

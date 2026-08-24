@@ -9,9 +9,6 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import { ClerkProvider } from "@clerk/clerk-react";
-import ClerkLogin from "./ClerkLogin";
-
 import { AuthProvider, AuthContext } from "./AuthContext";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -128,7 +125,6 @@ const App = () => {
           path="/login"
           element={user ? <Navigate to="/home" replace /> : <Login />}
         />
-        <Route path="/clerk-login" element={<ClerkLogin />} />
 
         <Route
           path="/signup"
@@ -152,13 +148,11 @@ const App = () => {
 ========================= */
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
-      <AuthProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </AuthProvider>
-    </ClerkProvider>
+    <AuthProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </AuthProvider>
   </React.StrictMode>
 );
 
