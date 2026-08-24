@@ -100,7 +100,7 @@ Write ONLY the proposal text, no extra formatting, labels, thinking, or reasonin
                     { role: "user", content: prompt }
                 ],
                 temperature: 0.5,
-                max_tokens: 300
+                max_tokens: 1000
             },
             {
                 headers: {
